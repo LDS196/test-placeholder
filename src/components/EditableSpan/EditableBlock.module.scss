@@ -1,0 +1,14 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px 0;
+
+  span {
+    display: block;
+  }
+}
+.button{
+  display: flex;
+  align-items: center;
+  gap: 0 50px;
+}

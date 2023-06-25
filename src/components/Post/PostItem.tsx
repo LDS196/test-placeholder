@@ -11,6 +11,7 @@ import Comments from "../Comments/Comments"
 import { CommentType } from "../../features/posts/posts.api"
 import { useActions } from "../../hooks/useActions"
 import { postsThunks } from "../../features/posts/posts.slice"
+import { EditableBlock } from "../EditableSpan/EditableBlock"
 
 type Props = {
     id: number
@@ -21,14 +22,18 @@ type Props = {
 export const PostItem = ({ title, body, name, id }: Props) => {
     const [comments, setComments] = useState<CommentType[]>([])
     const { getComments } = useActions(postsThunks)
+    let [editMode, setEditMode] = useState(false)
 
     const [isShowComments, setIsShowComments] = useState<boolean>(false)
+    const buttonCommentClass= isShowComments? "": s.buttonComment
     const handleChange = () => {
         console.log("ch")
     }
+    const activateViewMode=()=>{
+        setEditMode(false)
+    }
     const onClickHandler = (e:any) => {
-        e.currentTarget.disabled = true;
-        setIsShowComments((prevState) => !prevState)
+        setIsShowComments(!isShowComments)
         getComments({ postId:id }).then((res) => {
             if (Array.isArray(res.payload)) {
                 setComments(res.payload)
@@ -39,17 +44,14 @@ export const PostItem = ({ title, body, name, id }: Props) => {
     return (
         <div className={s.postBlock}>
             <div className={s.container}>
-                <div className={s.post}>
-                    <h3>Title: {title}</h3>
-                    <h4>Name: {name}</h4>
-                    <p>Description: {body}</p>
-                </div>
+                <div className={s.post}></div>
+                <EditableBlock title={title} name={name} body={body} activateViewMode={activateViewMode} editMode={editMode}/>
 
                 <div className={s.settings}>
-                    <IconButton onClick={onClickHandler}>
+                    <IconButton onClick={onClickHandler} className={buttonCommentClass}>
                         <CommentIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={()=>{setEditMode(true)}}>
                         <EditIcon />
                     </IconButton>
                     <IconButton>
