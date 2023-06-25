@@ -29,15 +29,14 @@ export const Posts = () => {
 
     return (
         <>
-            {!isLoading && (
                 <div>
                     {
                         postsForRender.map(p=>{
-                            return <PostItem key={p.id} title={p.title} name={p.name} body={p.body}/>
+                            return <PostItem key={p.id} title={p.title} name={p.name} body={p.body} id={p.id}/>
                         })
                     }
                 </div>
-            )}
+
         </>
     )
 }
