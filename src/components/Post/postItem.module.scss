@@ -1,0 +1,23 @@
+.container{
+  display: flex;
+  align-items: start;
+  padding: 15px 0;
+  border-bottom: 1px solid green;
+}
+.post{
+  flex: 1 1 70%;
+  display: flex;
+  flex-direction: column;
+  gap:  10px 0;
+
+  h3{
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+.settings{
+  flex: 1 1 30%;
+  display: flex;
+  gap: 20px;
+  flex-wrap:wrap ;
+}
