@@ -10,6 +10,12 @@ export const postsApi = {
     getComments(postId:number) {
         return instance.get<CommentType[]>(`/posts/${postId}/comments`)
     },
+    updatePost(post:PostType) {
+        return instance.put<PostType>(`/posts/${post.id}`,post)
+    },
+    deletePost(id:number) {
+        return instance.delete<void>(`/posts/${id}`)
+    },
 }
 
 

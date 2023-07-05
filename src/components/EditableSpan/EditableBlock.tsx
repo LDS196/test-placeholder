@@ -2,21 +2,21 @@ import React, { ChangeEvent, useState } from "react"
 import TextField from "@mui/material/TextField"
 import { Button } from "@mui/material"
 import s from "./EditableBlock.module.scss"
+import { useActions } from "../../hooks/useActions"
+import { InitialPostType, postsActions, postsThunks } from "../../features/posts/posts.slice"
 
 type EditableSpanPropsType = {
-    title: string
-    name: string
-    body: string
-    editMode:boolean
+
+    editMode: boolean
     activateViewMode: () => void
+    post:InitialPostType
 }
 
-export const EditableBlock = React.memo(function (props: EditableSpanPropsType) {
-
-    let [title, setTitle] = useState(props.title)
-    let [name, setName] = useState(props.name)
-    let [body, setBody] = useState(props.body)
-
+export const EditableBlock = ({editMode,activateViewMode,post}: EditableSpanPropsType) => {
+    const [title, setTitle] = useState(post.title)
+    const [name, setName] = useState(post.name)
+    const [body, setBody] = useState(post.body)
+    const { updatePost } = useActions(postsThunks)
     const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
     }
@@ -26,30 +26,34 @@ export const EditableBlock = React.memo(function (props: EditableSpanPropsType) 
     const changeBody = (e: ChangeEvent<HTMLInputElement>) => {
         setBody(e.currentTarget.value)
     }
-    const saveChanges=()=>{
-
+    const saveChanges = () => {
+        updatePost({ id: post.id, title, body, userId: post.userId,favorite:post.favorite,checked:post.checked,name:name })
+        activateViewMode()
     }
-
-
-    return <div className={s.block}>
-        {
-            props.editMode ? (
+    const favoriteClass = post.favorite? s.favorite + ' ' + s.block :s.block
+    return (
+        <div className={favoriteClass}>
+            {editMode ? (
                 <>
-                    <TextField label={title}  fullWidth value={title} onChange={changeTitle} autoFocus />
-                    <TextField label={name} fullWidth value={name} onChange={changeName}/>
-                    <TextField label={body} fullWidth value={body} onChange={changeBody}/>
+                    <TextField label={"Title"} fullWidth value={title} onChange={changeTitle} autoFocus />
+                    <TextField label={"Name"} fullWidth value={name} onChange={changeName} />
+                    <TextField label={"Body"} fullWidth value={body} onChange={changeBody} />
                     <div className={s.button}>
-                        <Button onClick={saveChanges}>Save</Button>
-                        <Button onClick={props.activateViewMode} variant={"outlined"}>Cancel</Button>
+                        <Button onClick={saveChanges} variant={"contained"}>
+                            Save
+                        </Button>
+                        <Button onClick={activateViewMode} variant={"outlined"}>
+                            Cancel
+                        </Button>
                     </div>
                 </>
             ) : (
                 <>
-                    <span>Title: {props.title}</span>
-                    <span>Name: {props.name}</span>
-                    <span>Description: {props.body}</span>
+                    <span>Title: {post.title}</span>
+                    <span>Name: {post.name}</span>
+                    <span>Description: {post.body}</span>
                 </>
-            )
-        }
-    </div>
-})
+            )}
+        </div>
+    )
+}

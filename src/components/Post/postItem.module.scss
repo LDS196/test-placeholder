@@ -3,15 +3,9 @@
   align-items: start;
   padding: 15px 0;
   border-bottom: 1px solid green;
+  gap: 0 20px;
 }
-.post{
-  flex: 1 1 70%;
 
-  h3{
-    font-size: 18px;
-    font-weight: 700;
-  }
-}
 .settings{
   flex: 1 1 30%;
   display: flex;
