@@ -3,20 +3,20 @@ import TextField from "@mui/material/TextField"
 import { Button } from "@mui/material"
 import s from "./EditableBlock.module.scss"
 import { useActions } from "../../hooks/useActions"
-import { InitialPostType, postsActions, postsThunks } from "../../features/posts/posts.slice"
+import { InitialPostType, postsThunks } from "../../features/posts/posts.slice"
 
 type EditableSpanPropsType = {
-
     editMode: boolean
     activateViewMode: () => void
-    post:InitialPostType
+    post: InitialPostType
 }
 
-export const EditableBlock = ({editMode,activateViewMode,post}: EditableSpanPropsType) => {
+export const EditableBlock = ({ editMode, activateViewMode, post }: EditableSpanPropsType) => {
     const [title, setTitle] = useState(post.title)
     const [name, setName] = useState(post.name)
     const [body, setBody] = useState(post.body)
     const { updatePost } = useActions(postsThunks)
+
     const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
     }
@@ -27,10 +27,18 @@ export const EditableBlock = ({editMode,activateViewMode,post}: EditableSpanProp
         setBody(e.currentTarget.value)
     }
     const saveChanges = () => {
-        updatePost({ id: post.id, title, body, userId: post.userId,favorite:post.favorite,checked:post.checked,name:name })
+        updatePost({
+            id: post.id,
+            title,
+            body,
+            userId: post.userId,
+            favorite: post.favorite,
+            checked: post.checked,
+            name: name,
+        })
         activateViewMode()
     }
-    const favoriteClass = post.favorite? s.favorite + ' ' + s.block :s.block
+    const favoriteClass = post.favorite ? s.favorite + " " + s.block : s.block
     return (
         <div className={favoriteClass}>
             {editMode ? (

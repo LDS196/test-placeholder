@@ -7,34 +7,32 @@ export const postsApi = {
     getUsers() {
         return instance.get<UserType[]>(`/users`)
     },
-    getComments(postId:number) {
+    getComments(postId: number) {
         return instance.get<CommentType[]>(`/posts/${postId}/comments`)
     },
-    updatePost(post:PostType) {
-        return instance.put<PostType>(`/posts/${post.id}`,post)
+    updatePost(post: PostType) {
+        return instance.put<PostType>(`/posts/${post.id}`, post)
     },
-    deletePost(id:number) {
+    deletePost(id: number) {
         return instance.delete<void>(`/posts/${id}`)
     },
 }
 
-
-
-export type PostType={
-    userId: number,
-    id: number,
-    title: string,
+export type PostType = {
+    userId: number
+    id: number
+    title: string
     body: string
 }
-export type UserType={
-    name:string
-    id:number
+export type UserType = {
+    name: string
+    id: number
 }
 
-export type CommentType={
+export type CommentType = {
     postId: number
     id: number
     name: string
-    email: string,
+    email: string
     body: string
 }

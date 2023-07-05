@@ -1,17 +1,17 @@
-.container{
-  display: flex;
-  align-items: start;
-  padding: 15px 0;
-  border-bottom: 1px solid green;
-  gap: 0 20px;
+.container {
+    display: flex;
+    align-items: start;
+    padding: 15px 0;
+    border-bottom: 1px solid green;
+    gap: 0 20px;
 }
 
-.settings{
-  flex: 1 1 30%;
-  display: flex;
-  gap: 20px;
-  flex-wrap:wrap ;
+.settings {
+    flex: 1 1 30%;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
 }
-.buttonComment{
-  opacity: 0.5;
+.buttonComment {
+    opacity: 0.5;
 }

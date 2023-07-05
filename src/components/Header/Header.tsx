@@ -15,21 +15,20 @@ const Header = () => {
     const activeLink = ({ isActive }: { isActive: boolean }) => (isActive ? s.active : "")
     return (
         <>
-        <div className={s.container}>
-            <nav className={s.nav}>
-                <ul>
-                    {menu.map((el) => (
-                        <li key={el.title}>
-                            <NavLink className={activeLink} to={el.path}>
-                                {el.title}
-                            </NavLink>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
-
-        </div>
-    <div style={{ height: "10px" }}>{isLoading && <LinearProgress />}</div>
+            <div className={s.container}>
+                <nav className={s.nav}>
+                    <ul>
+                        {menu.map((el) => (
+                            <li key={el.title}>
+                                <NavLink className={activeLink} to={el.path}>
+                                    {el.title}
+                                </NavLink>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+            <div style={{ height: "10px" }}>{isLoading && <LinearProgress />}</div>
         </>
     )
 }

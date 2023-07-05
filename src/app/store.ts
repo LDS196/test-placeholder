@@ -4,7 +4,7 @@ import { postsReducer } from "../features/posts/posts.slice"
 
 const rootReducer = combineReducers({
     app: appReducer,
-    posts: postsReducer
+    posts: postsReducer,
 })
 
 export const store = configureStore({
