@@ -1,0 +1,60 @@
+form {
+    padding: 20px;
+    position: relative;
+    animation: scale-up-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.inputContainer {
+    margin: 5px 0;
+}
+
+.buttons {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.error {
+    margin-top: 8px;
+    height: 16px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: red;
+}
+
+.inputSelectLabel {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(0, 0, 0, 0.48);
+}
+
+.modalWrapper {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes scale-up-top {
+    0% {
+        transform: scale(0.5);
+        transform-origin: 50% 0;
+    }
+    100% {
+        transform: scale(1);
+        transform-origin: 50% 0;
+    }
+}
+
+//.modal {
+//    position: relative;
+//    animation: scale-up-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+//}

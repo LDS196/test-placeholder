@@ -13,6 +13,9 @@ export const postsApi = {
     updatePost(post: PostType) {
         return instance.put<PostType>(`/posts/${post.id}`, post)
     },
+    createPost(post: Omit<PostType, "id">) {
+        return instance.post<PostType>(`/posts`, post)
+    },
     deletePost(id: number) {
         return instance.delete<void>(`/posts/${id}`)
     },

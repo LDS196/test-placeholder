@@ -3,6 +3,7 @@ import { createAppAsyncThunk } from "../../components/common/utils/create-app-as
 import { RootState } from "../../app/store"
 import { handleServerNetworkError } from "../../components/common/utils/handle-server-network-error"
 import { CommentType, postsApi, PostType, UserType } from "./posts.api"
+import { FormDataType } from "../../components/NewPost/NewPostForm"
 
 const getUsers = createAppAsyncThunk<UserType[], void, { state: RootState }>("posts/getUsers", async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI
@@ -14,27 +15,23 @@ const getUsers = createAppAsyncThunk<UserType[], void, { state: RootState }>("po
     }
 })
 
-const getPosts = createAppAsyncThunk<
-    InitialPostType[],
-    void,
-    {
-        state: RootState
+const getPosts = createAppAsyncThunk<InitialPostType[], void, { state: RootState }>(
+    "posts/getPosts",
+    async (_, thunkAPI) => {
+        const { rejectWithValue, getState } = thunkAPI
+        const users = getState().posts.users
+        try {
+            const res = await postsApi.getPosts()
+
+            return res.data.map((p) => {
+                const user = users.find((u) => u.id === p.userId)
+                return { ...p, favorite: false, checked: false, name: user?.name as string }
+            })
+        } catch (error) {
+            return rejectWithValue(handleServerNetworkError(error))
+        }
     }
->("posts/getPosts", async (_, thunkAPI) => {
-    const { rejectWithValue, getState } = thunkAPI
-    const countPosts = getState().posts.countPosts
-    try {
-        const res = await postsApi.getPosts()
-        const posts = countPosts === "All" ? res.data : res.data.slice(0, +countPosts)
-        const users = await postsApi.getUsers()
-        return posts.map((p) => {
-            const user = users.data.find((u) => u.id === p.userId)
-            return { ...p, favorite: false, checked: false, name: user?.name as string }
-        })
-    } catch (error) {
-        return rejectWithValue(handleServerNetworkError(error))
-    }
-})
+)
 const deletePost = createAppAsyncThunk<number, { id: number }, { state: RootState }>(
     "posts/deletePost",
     async (arg, thunkAPI) => {
@@ -44,6 +41,21 @@ const deletePost = createAppAsyncThunk<number, { id: number }, { state: RootStat
             await postsApi.deletePost(arg.id)
             const index = posts.findIndex((p) => p.id === arg.id)
             return index
+        } catch (error) {
+            return rejectWithValue(handleServerNetworkError(error))
+        }
+    }
+)
+const createPost = createAppAsyncThunk<InitialPostType, FormDataType, { state: RootState }>(
+    "posts/createPost",
+    async (arg, thunkAPI) => {
+        const { rejectWithValue, getState } = thunkAPI
+        const users = getState().posts.users
+        const posts = getState().posts.posts
+        const user = users.find((u) => u.name === arg.name)
+        try {
+            await postsApi.createPost({ userId: user?.id as number, title: arg.title, body: arg.body })
+            return { ...arg, favorite: false, checked: false, id: posts.length, userId: user?.id as number }
         } catch (error) {
             return rejectWithValue(handleServerNetworkError(error))
         }
@@ -146,6 +158,9 @@ const slice = createSlice({
             state.users = action.payload
         })
         builder.addCase(getComments.fulfilled, () => {})
+        builder.addCase(createPost.fulfilled, (state, action) => {
+            state.posts.unshift(action.payload)
+        })
         builder.addCase(updatePost.fulfilled, (state, action) => {
             state.posts = action.payload
         })
@@ -158,4 +173,4 @@ const slice = createSlice({
 
 export const postsActions = slice.actions
 export const postsReducer = slice.reducer
-export const postsThunks = { getPosts, getUsers, getComments, updatePost, deletePost }
+export const postsThunks = { getPosts, getUsers, getComments, updatePost, deletePost, createPost }

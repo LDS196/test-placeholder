@@ -13,28 +13,29 @@ export const Posts = () => {
     const searchValue = useSelector(selectSearchValue)
     const countPosts = useSelector(selectCountPosts)
     const filterUserNames = useSelector(selectFilterUserNames)
-    const { getPosts } = useActions(postsThunks)
+    const { getPosts, getUsers } = useActions(postsThunks)
     const { removePosts, addPostsFavorites } = useActions(postsActions)
     const posts = useSelector(selectPosts)
     const sortBy = useSelector(selectSortBy)
 
-    let postForRender = posts.filter((p) => p.title.includes(searchValue))
+    let postsForRender = countPosts === "All" ? posts : posts.slice(0, +countPosts)
+    postsForRender = postsForRender.filter((p) => p.title.includes(searchValue))
     if (filterUserNames.length !== 0) {
-        postForRender = postForRender.filter((p) => filterUserNames.includes(p.name))
+        postsForRender = postsForRender.filter((p) => filterUserNames.includes(p.name))
     }
     if (sortBy.name && sortBy.sortType) {
         const key = sortBy.name
         const sortDirection = sortBy.sortType
-        postForRender.sort((a, b) => {
-            if (key === "userId") return (a[key] - b[key])* sortDirection
-            if (key === "favorites") return (-sortDirection)
+        postsForRender.sort((a, b) => {
+            if (key === "userId") return (a[key] - b[key]) * sortDirection
+            if (key === "favorites") return -sortDirection
             if (a[key].toLowerCase() < b[key].toLowerCase()) return sortDirection
             if (a[key].toLowerCase() > b[key].toLowerCase()) return sortDirection
             return 0
         })
     }
 
-    const postChecked = posts.find((p) => p.checked)
+    const postChecked = postsForRender.find((p) => p.checked)
 
     const [showModalWindow, setShowModalWindow] = useState(false)
     const hideModal = () => setShowModalWindow(false)
@@ -50,8 +51,8 @@ export const Posts = () => {
     }
 
     useEffect(() => {
-        getPosts({})
-    }, [countPosts])
+        getUsers({}).then(() => getPosts({}))
+    }, [])
 
     return (
         <>
@@ -69,7 +70,7 @@ export const Posts = () => {
                 )}
             </div>
             <div>
-                {postForRender.map((p) => (
+                {postsForRender.map((p) => (
                     <PostItem key={p.id} post={p} />
                 ))}
             </div>

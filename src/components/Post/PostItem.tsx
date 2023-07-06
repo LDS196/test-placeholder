@@ -53,6 +53,7 @@ export const PostItem = ({ post }: Props) => {
             }
         })
     }
+    const colorForIconFavorite = post.favorite ? "primary" : "inherit"
 
     return (
         <div className={s.postBlock}>
@@ -77,7 +78,7 @@ export const PostItem = ({ post }: Props) => {
                         <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={addFavoriteHandler}>
-                        <BookmarkAddedIcon />
+                        <BookmarkAddedIcon color={colorForIconFavorite} />
                     </IconButton>
 
                     <FormControlLabel
