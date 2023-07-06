@@ -5,7 +5,7 @@ import { handleServerNetworkError } from "../../components/common/utils/handle-s
 import { CommentType, postsApi, PostType, UserType } from "./posts.api"
 
 const getUsers = createAppAsyncThunk<UserType[], void, { state: RootState }>("posts/getUsers", async (_, thunkAPI) => {
-    const { rejectWithValue} = thunkAPI
+    const { rejectWithValue } = thunkAPI
     try {
         const res = await postsApi.getUsers()
         return res.data
