@@ -1,6 +1,6 @@
 import React from "react"
 import s from "./Header.module.scss"
-import { Link, NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { LinearProgress } from "@mui/material"
 import { useSelector } from "react-redux"
 import { selectIsLoading } from "../../app/app.select"
@@ -8,7 +8,7 @@ import { selectIsLoading } from "../../app/app.select"
 const Header = () => {
     const isLoading = useSelector(selectIsLoading)
     const menu = [
-        { path: "/posts", title: "posts" },
+        { path: "/", title: "posts" },
         { path: "/albums", title: "albums" },
         { path: "/todos", title: "todos" },
     ]

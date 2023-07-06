@@ -12,7 +12,7 @@ function App() {
             <div className={s.app}>
                 <ErrorSnackbar />
                 <Routes>
-                    <Route path={"/posts"} element={<Posts />} />
+                    <Route path={"/"} element={<Posts />} />
                     <Route path={"/albums"} element={<div>al</div>} />
                     <Route path={"/todos"} element={<div>todos</div>} />
                 </Routes>
