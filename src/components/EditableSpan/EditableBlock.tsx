@@ -36,7 +36,9 @@ export const EditableBlock = ({ editMode, activateViewMode, post }: EditableSpan
             checked: post.checked,
             name: name,
         })
-        activateViewMode()
+            .unwrap()
+            .then(()=>activateViewMode())
+
     }
     const favoriteClass = post.favorite ? s.favorite + " " + s.block : s.block
     return (
@@ -57,9 +59,9 @@ export const EditableBlock = ({ editMode, activateViewMode, post }: EditableSpan
                 </>
             ) : (
                 <>
-                    <span>Title: {post.title}</span>
-                    <span>Name: {post.name}</span>
-                    <span>Description: {post.body}</span>
+                    <span><b>Title:</b> {post.title}</span>
+                    <span><b>Name:</b> {post.name}</span>
+                    <span><b>Description:</b> {post.body}</span>
                 </>
             )}
         </div>

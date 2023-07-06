@@ -1,0 +1,13 @@
+.sortBy {
+    display: flex;
+    align-items: center;
+}
+.coverTable {
+    width: 100px;
+    height: 50px;
+    img {
+        width: 100px;
+        height: 50px;
+        object-fit: cover;
+    }
+}

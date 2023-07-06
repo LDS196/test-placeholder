@@ -5,7 +5,7 @@ import { handleServerNetworkError } from "../../components/common/utils/handle-s
 import { CommentType, postsApi, PostType, UserType } from "./posts.api"
 
 const getUsers = createAppAsyncThunk<UserType[], void, { state: RootState }>("posts/getUsers", async (_, thunkAPI) => {
-    const { rejectWithValue, getState } = thunkAPI
+    const { rejectWithValue} = thunkAPI
     try {
         const res = await postsApi.getUsers()
         return res.data
@@ -25,7 +25,7 @@ const getPosts = createAppAsyncThunk<
     const countPosts = getState().posts.countPosts
     try {
         const res = await postsApi.getPosts()
-        const posts = countPosts ? res.data.slice(0, countPosts) : res.data
+        const posts = countPosts === "All" ? res.data : res.data.slice(0, +countPosts)
         const users = await postsApi.getUsers()
         return posts.map((p) => {
             const user = users.data.find((u) => u.id === p.userId)
@@ -52,7 +52,7 @@ const deletePost = createAppAsyncThunk<number, { id: number }, { state: RootStat
 const getComments = createAppAsyncThunk<CommentType[], { postId: number }, { state: RootState }>(
     "posts/getComments",
     async (arg, thunkAPI) => {
-        const { rejectWithValue, getState } = thunkAPI
+        const { rejectWithValue } = thunkAPI
 
         try {
             const res = await postsApi.getComments(arg.postId)
@@ -77,37 +77,50 @@ const updatePost = createAppAsyncThunk<InitialPostType[], InitialPostType, { sta
         }
     }
 )
-export type InitialPostType = PostType & { favorite: boolean; checked: boolean; name: string }
+export type InitialPostType = PostType & { favorite: boolean; checked: boolean; name: string; [key: string]: any }
 
 type InitialStateType = {
     filterUserNames: string[]
     searchValue: string
     users: UserType[]
-    countPosts: number
+    countPosts: string
     posts: InitialPostType[]
+    sortBy: {
+        name: string
+        sortType: null | number
+    }
 }
 const initialState: InitialStateType = {
     filterUserNames: [],
     searchValue: "",
-    countPosts: 30,
+    countPosts: "10",
     posts: [],
     users: [],
+    sortBy: {
+        name: "",
+        sortType: null,
+    },
 }
 const slice = createSlice({
     name: "posts",
     initialState,
     reducers: {
-        changePageSize: (state, action: PayloadAction<number>) => {},
+        setCountPosts: (state, action: PayloadAction<string>) => {
+            state.countPosts = action.payload
+        },
         setSearchValue: (state, action: PayloadAction<string>) => {
             state.searchValue = action.payload
         },
         setFilterUserNames: (state, action: PayloadAction<string[]>) => {
             state.filterUserNames = action.payload
         },
-        removePosts: (state, action) => {
+        sortPacks: (state, action: PayloadAction<{ name: string; sortType: number | null }>) => {
+            state.sortBy = { ...action.payload }
+        },
+        removePosts: (state) => {
             state.posts = state.posts.filter((p) => p.checked !== true)
         },
-        addPostsFavorites: (state, action) => {
+        addPostsFavorites: (state) => {
             state.posts = state.posts.map((p) => (p.checked === true ? { ...p, favorite: true } : p))
         },
 
@@ -132,7 +145,7 @@ const slice = createSlice({
         builder.addCase(getUsers.fulfilled, (state, action) => {
             state.users = action.payload
         })
-        builder.addCase(getComments.fulfilled, (state, action) => {})
+        builder.addCase(getComments.fulfilled, () => {})
         builder.addCase(updatePost.fulfilled, (state, action) => {
             state.posts = action.payload
         })

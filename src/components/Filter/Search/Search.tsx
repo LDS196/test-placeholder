@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FC, useEffect, useState } from "react"
-import { InputAdornment, TextField, Typography } from "@mui/material"
+import React, { ChangeEvent, } from "react"
+import { InputAdornment, TextField, } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import { useActions } from "../../../hooks/useActions"
 import { postsActions } from "../../../features/posts/posts.slice"
@@ -16,9 +16,6 @@ export const Search = () => {
 
     return (
         <div>
-            {/*<Typography component="p" sx={{ fontSize: "18px" }}>*/}
-            {/*    Search*/}
-            {/*</Typography>*/}
             <TextField
                 onChange={handleChange}
                 value={searchValue}

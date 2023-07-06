@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useActions } from "../../hooks/useActions"
 import { postsActions, postsThunks } from "./posts.slice"
-import { selectIsLoading } from "../../app/app.select"
 import { useSelector } from "react-redux"
 import { PostItem } from "../../components/Post/PostItem"
-import { selectFilterUserNames, selectPosts, selectSearchValue } from "./posts.selector"
+import { selectCountPosts, selectFilterUserNames, selectPosts, selectSearchValue, selectSortBy } from "./posts.selector"
 import s from "./posts.module.scss"
 import { Button } from "@mui/material"
 import { ModalWindow } from "../../components/ModalWindows/ModalWindow"
@@ -12,15 +11,27 @@ import Filter from "../../components/Filter/Filter"
 
 export const Posts = () => {
     const searchValue = useSelector(selectSearchValue)
+    const countPosts = useSelector(selectCountPosts)
     const filterUserNames = useSelector(selectFilterUserNames)
-    const isLoading = useSelector(selectIsLoading)
     const { getPosts } = useActions(postsThunks)
     const { removePosts, addPostsFavorites } = useActions(postsActions)
     const posts = useSelector(selectPosts)
+    const sortBy = useSelector(selectSortBy)
 
     let postForRender = posts.filter((p) => p.title.includes(searchValue))
     if (filterUserNames.length !== 0) {
         postForRender = postForRender.filter((p) => filterUserNames.includes(p.name))
+    }
+    if (sortBy.name && sortBy.sortType) {
+        const key = sortBy.name
+        const sortDirection = sortBy.sortType
+        postForRender.sort((a, b) => {
+            if (key === "userId") return (a[key] - b[key])* sortDirection
+            if (key === "favorites") return (-sortDirection)
+            if (a[key].toLowerCase() < b[key].toLowerCase()) return sortDirection
+            if (a[key].toLowerCase() > b[key].toLowerCase()) return sortDirection
+            return 0
+        })
     }
 
     const postChecked = posts.find((p) => p.checked)
@@ -28,19 +39,19 @@ export const Posts = () => {
     const [showModalWindow, setShowModalWindow] = useState(false)
     const hideModal = () => setShowModalWindow(false)
     const removePostsHandler = () => {
-        removePosts({})
+        removePosts()
         hideModal()
     }
     const [showModalWindowFavorites, setShowModalWindowFavorites] = useState(false)
     const hideModalFavorites = () => setShowModalWindowFavorites(false)
     const addPostsFavoritesHandler = () => {
-        addPostsFavorites({})
+        addPostsFavorites()
         hideModalFavorites()
     }
 
     useEffect(() => {
         getPosts({})
-    }, [])
+    }, [countPosts])
 
     return (
         <>
@@ -57,11 +68,10 @@ export const Posts = () => {
                     </>
                 )}
             </div>
-            {postChecked && <div></div>}
             <div>
-                {postForRender.map((p) => {
-                    return <PostItem key={p.id} post={p} />
-                })}
+                {postForRender.map((p) => (
+                    <PostItem key={p.id} post={p} />
+                ))}
             </div>
             <>
                 {showModalWindow && (
