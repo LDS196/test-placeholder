@@ -1,4 +1,4 @@
-:seedling: <a href="test-placeholder.vercel.app" target="_blank">Posts</a>
+:seedling: <a href="https://test-placeholder.vercel.app/" target="_blank">Posts</a>
 ---
 приложение позволяет пользователям создавать, редактировать, удалять, добавлять в избранное, сортировать, фильтровать, посты и другое.
 В качестве API использован сервис JSONPlaceholder - Free Fake REST API (typicode.com)
