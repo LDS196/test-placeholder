@@ -18,6 +18,7 @@
 ![API](https://img.shields.io/badge/-Api-yellow)
 ![Axios](https://img.shields.io/badge/-Axios-yellow)
 ![Redux_Persist](https://img.shields.io/badge/-Redux_Persist-blue)
+
 Clone repositories:
 ```
 git clone https://github.com/LDS196/test-placeholder.git
